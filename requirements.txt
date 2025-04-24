@@ -1,0 +1,6 @@
+pip install Flask==2.0.1
+pip install requests==2.26.0
+pip install beautifulsoup4==4.10.0
+pip install Pillow==9.0.0
+pip install fpdf2==2.5.6
+pip install gunicorn==20.1.0

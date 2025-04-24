@@ -10,9 +10,10 @@ from flask import Flask
 import threading
 import os
 from flask import Flask
+from flask_cors import CORS
 
 app = Flask(__name__)
-
+CORS(app) 
 @app.route('/download', methods=['GET'])
 def download_chapter_images():
     title = request.args.get('title')
