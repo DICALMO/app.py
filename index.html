@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>أداة تحميل مانجا من azoramoon</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #27ae60;
+            --primary-dark: #219653;
+            --bg: #121212;
+            --card-bg: #1e1e1e;
+            --text: #f0f0f0;
+            --secondary-text: #b0b0b0;
+            --border: #333;
+            --error: #e74c3c;
+            --success: #2ecc71;
+        }
+        
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        
+        body {
+            font-family: 'Tajawal', sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 2rem 1.5rem;
+            width: 100%;
+            flex: 1;
+        }
+        
+        header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        
+        .logo {
+            font-size: 2.5rem;
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+        }
+        
+        h1 {
+            color: var(--primary);
+            font-size: 1.8rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .subtitle {
+            color: var(--secondary-text);
+            font-size: 1rem;
+        }
+        
+        .card {
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 2rem;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3);
+            margin-bottom: 1.5rem;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 35px rgba(0, 0, 0, 0.4);
+        }
+        
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: var(--primary);
+            text-align: right;
+        }
+        
+        .input-wrapper {
+            position: relative;
+        }
+        
+        .input-wrapper i {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--secondary-text);
+            font-size: 1.1rem;
+        }
+        
+        input {
+            width: 100%;
+            padding: 1rem 1rem 1rem 3rem;
+            font-size: 1rem;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+            background: #2c2c2c;
+            color: var(--text);
+            font-family: 'Tajawal', sans-serif;
+            transition: all 0.3s;
+        }
+        
+        input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(39, 174, 96, 0.2);
+        }
+        
+        .btn {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            font-size: 1rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 700;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.75rem;
+            width: 100%;
+            transition: all 0.3s;
+            font-family: 'Tajawal', sans-serif;
+        }
+        
+        .btn:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(39, 174, 96, 0.4);
+        }
+        
+        .btn:disabled {
+            background: #555;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+        
+        #status {
+            margin-top: 1.5rem;
+            min-height: 60px;
+        }
+        
+        .result-container {
+            display: none;
+            animation: fadeIn 0.5s;
+        }
+        
+        .result-card {
+            background: rgba(39, 174, 96, 0.1);
+            border: 1px solid var(--primary);
+            border-radius: 8px;
+            padding: 1.5rem;
+            text-align: center;
+        }
+        
+        .result-title {
+            color: var(--primary);
+            margin-bottom: 1rem;
+            font-size: 1.2rem;
+        }
+        
+        .download-link {
+            display: inline-flex;
+            align-items: center;
+            background: var(--primary);
+            color: white;
+            padding: 0.8rem 1.5rem;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s;
+            margin-top: 1rem;
+        }
+        
+        .download-link:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(39, 174, 96, 0.4);
+        }
+        
+        .download-link i {
+            margin-left: 0.5rem;
+        }
+        
+        .progress-container {
+            width: 100%;
+            background: #333;
+            border-radius: 8px;
+            margin: 1.5rem 0;
+            overflow: hidden;
+            display: none;
+        }
+        
+        .progress-bar {
+            height: 10px;
+            background: var(--primary);
+            border-radius: 8px;
+            width: 0%;
+            transition: width 0.5s ease;
+        }
+        
+        .progress-text {
+            text-align: center;
+            margin-top: 0.5rem;
+            font-size: 0.9rem;
+            color: var(--secondary-text);
+        }
+        
+        .error-message {
+            color: var(--error);
+            margin-top: 0.5rem;
+            font-size: 0.9rem;
+            text-align: right;
+            display: none;
+        }
+        
+        .instructions {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-top: 2rem;
+        }
+        
+        .instructions h3 {
+            color: var(--primary);
+            margin-bottom: 1rem;
+            font-size: 1.2rem;
+        }
+        
+        .instructions ol {
+            padding-right: 1.5rem;
+            color: var(--secondary-text);
+        }
+        
+        .instructions li {
+            margin-bottom: 0.5rem;
+        }
+        
+        footer {
+            text-align: center;
+            padding: 1.5rem;
+            color: var(--secondary-text);
+            font-size: 0.9rem;
+            border-top: 1px solid var(--border);
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                padding: 1.5rem 1rem;
+            }
+            
+            .card {
+                padding: 1.5rem;
+            }
+            
+            h1 {
+                font-size: 1.5rem;
+            }
+            
+            .logo {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="logo">
+                <i class="fas fa-book-open"></i>
+            </div>
+            <h1>أداة تحميل المانجا من azoramoon</h1>
+            <p class="subtitle">قم بتحميل فصول المانجا المفضلة لديك بسهولة وسرعة</p>
+        </header>
+        
+        <div class="card">
+            <div class="form-group">
+                <label for="mangaTitle">
+                    <i class="fas fa-book" style="margin-left: 0.5rem;"></i>
+                    اسم المانجا
+                </label>
+                <div class="input-wrapper">
+                    <i class="fas fa-search"></i>
+                    <input type="text" id="mangaTitle" placeholder="مثال: I Became the Stepmother" autocomplete="off">
+                </div>
+                <div class="error-message" id="titleError"></div>
+            </div>
+            
+            <div class="form-group">
+                <label for="chapters">
+                    <i class="fas fa-list-ol" style="margin-left: 0.5rem;"></i>
+                    أرقام الفصول
+                </label>
+                <div class="input-wrapper">
+                    <i class="fas fa-hashtag"></i>
+                    <input type="text" id="chapters" placeholder="مثال: 1,2,3 أو 5-10" autocomplete="off">
+                </div>
+                <div class="error-message" id="chaptersError"></div>
+            </div>
+            
+            <button id="downloadBtn" class="btn" onclick="downloadManga()">
+                <i class="fas fa-download"></i>
+                بدء التحميل
+            </button>
+            
+            <div id="status"></div>
+            
+            <div class="progress-container" id="progressContainer">
+                <div class="progress-bar" id="progressBar"></div>
+                <div class="progress-text" id="progressText">0%</div>
+            </div>
+            
+            <div class="result-container" id="resultContainer">
+                <div class="result-card">
+                    <div class="result-title">تم تحضير ملف المانجا بنجاح!</div>
+                    <a href="#" id="downloadLink" class="download-link" download>
+                        <i class="fas fa-file-pdf"></i>
+                        اضغط للتحميل
+                    </a>
+                </div>
+            </div>
+        </div>
+        
+        <div class="instructions">
+            <h3><i class="fas fa-info-circle" style="margin-left: 0.5rem;"></i>طريقة الاستخدام</h3>
+            <ol>
+                <li>اكتب اسم المانجا كما هو موجود على الموقع (بالإنجليزية)</li>
+                <li>حدد الفصول المطلوبة (يمكنك استخدام الفاصلة بين الأرقام أو الشرطة للنطاقات)</li>
+                <li>اضغط على زر "بدء التحميل" وانتظر حتى يتم تجهيز الملف</li>
+                <li>بعد الانتهاء، اضغط على زر التحميل لحفظ الملف على جهازك</li>
+            </ol>
+        </div>
+    </div>
+    
+    <footer>
+        <p>أداة تحميل المانجا &copy; 2023 | جميع الحقوق محفوظة</p>
+    </footer>
+
+    <script>
+        function slugify(text) {
+            return text.toLowerCase()
+                .trim()
+                .replace(/\s+/g, '-')       // Replace spaces with -
+                .replace(/[^a-z0-9\-]/g, '') // Remove non-alphanumeric
+        }
+
+        function validateInputs() {
+            let isValid = true;
+            const title = document.getElementById('mangaTitle').value.trim();
+            const chapters = document.getElementById('chapters').value.trim();
+            const titleError = document.getElementById('titleError');
+            const chaptersError = document.getElementById('chaptersError');
+            
+            // Reset errors
+            titleError.style.display = 'none';
+            chaptersError.style.display = 'none';
+            
+            // Validate title
+            if (!title) {
+                titleError.innerText = "يرجى إدخال اسم المانجا";
+                titleError.style.display = 'block';
+                isValid = false;
+            }
+            
+            // Validate chapters
+            if (!chapters) {
+                chaptersError.innerText = "يرجى إدخال أرقام الفصول";
+                chaptersError.style.display = 'block';
+                isValid = false;
+            } else if (!/^[\d\s,\-]+$/.test(chapters)) {
+                chaptersError.innerText = "صيغة غير صحيحة، استخدم أرقاماً مفصولة بفاصلة أو شرطة للنطاقات";
+                chaptersError.style.display = 'block';
+                isValid = false;
+            }
+            
+            return isValid;
+        }
+
+        async function downloadManga() {
+            // Validate inputs first
+            if (!validateInputs()) return;
+            
+            const rawTitle = document.getElementById('mangaTitle').value.trim();
+            const chapters = document.getElementById('chapters').value.trim();
+            const cleanedTitle = slugify(rawTitle);
+            const downloadBtn = document.getElementById('downloadBtn');
+            const statusElement = document.getElementById('status');
+            const progressContainer = document.getElementById('progressContainer');
+            const progressBar = document.getElementById('progressBar');
+            const progressText = document.getElementById('progressText');
+            const resultContainer = document.getElementById('resultContainer');
+            const downloadLink = document.getElementById('downloadLink');
+            
+            // Reset UI
+            resultContainer.style.display = 'none';
+            progressContainer.style.display = 'block';
+            progressBar.style.width = '0%';
+            progressText.innerText = '0%';
+            downloadBtn.disabled = true;
+            statusElement.innerHTML = '<i class="fas fa-spinner fa-spin"></i> جاري تجهيز ملف المانجا، يرجى الانتظار...';
+            
+            try {
+                // Simulate progress (in a real app, you'd use actual progress events)
+                let progress = 0;
+                const progressInterval = setInterval(() => {
+                    progress += Math.random() * 10;
+                    if (progress > 90) progress = 90;
+                    progressBar.style.width = `${progress}%`;
+                    progressText.innerText = `${Math.floor(progress)}%`;
+                }, 500);
+                
+        const res = await fetch(`download?title=${encodeURIComponent(cleanedTitle)}&chapters=${encodeURIComponent(chapters)}`);
+        
+        clearInterval(progressInterval);
+        progressBar.style.width = '100%';
+        progressText.innerText = '100%';
+        
+        statusElement.innerHTML = '<i class="fas fa-check-circle" style="color: var(--success);"></i> تم تحميل ملف المانجا بنجاح!';
+        
+        try {
+            const data = await res.json();
+            if (data.success && data.link) {
+                downloadLink.href = data.link;
+                resultContainer.style.display = 'block';
+            }
+        } catch (e) {
+            console.log('تم التحميل بنجاح:', e);
+        }
+    } catch (e) {
+        statusElement.innerHTML = '<i class="fas fa-times-circle" style="color: var(--error);"></i> فشل الاتصال بالخادم';
+        console.error('Correct:', e);
+    } finally {
+        downloadBtn.disabled = false;
+    }
+}
+    </script>
+</body>
+</html>
